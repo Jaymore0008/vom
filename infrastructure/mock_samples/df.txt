@@ -1,0 +1,33 @@
+Filesystem                              Type     1024-blocks      Used Available Capacity Mounted on
+devtmpfs                                devtmpfs    65707012         0  65707012       0% /dev
+tmpfs                                   tmpfs      201326592         4 201326588       1% /dev/shm
+tmpfs                                   tmpfs       65724956   4236972  61487984       7% /run
+tmpfs                                   tmpfs       65724956         0  65724956       0% /sys/fs/cgroup
+/dev/mapper/vg_00-root                  ext4       101585912  46321740  50057748      49% /
+/dev/sda2                               ext4        10218772    297320   9380780       4% /boot
+/dev/sda1                               vfat         1046512      5948   1040564       1% /boot/efi
+/dev/mapper/appdata--vg01-appdata--lv01 ext4         5070496    344000   4448176       8% /app/data
+tmpfs                                   tmpfs              4         0         4       0% /dev/vx
+tmpfs                                   tmpfs       13144988         0  13144988       0% /run/user/1006
+tmpfs                                   tmpfs       13144988         0  13144988       0% /run/user/0
+/dev/vx/dsk/PP1-DATA/oracle             vxfs        52428800  36153240  16148456      70% /oracle
+/dev/vx/dsk/PP1-DATA/sapreorg           vxfs        52428800    127688  51892520       1% /oracle/PP1/sapreorg
+/dev/vx/dsk/PP1-DATA/softdump           vxfs        52428800  24387336  27823160      47% /softdump
+/dev/vx/dsk/PP1-DATA/sapdata4           vxfs       178257920 143440616  34545304      81% /oracle/PP1/sapdata4
+/dev/vx/dsk/PP1-DATA/sapdata2           vxfs       220200960 133219256  86302168      61% /oracle/PP1/sapdata2
+/dev/vx/dsk/PP1-ARCH/oraarch            vxfs       209715200 150424680  58829696      72% /oracle/PP1/oraarch
+/dev/vx/dsk/PP1-LOG/origlogB            vxfs        36700160   2196808  34233808       7% /oracle/PP1/origlogB
+/dev/vx/dsk/PP1-DATA/12102              vxfs        31457280  14381200  16945624      46% /oracle/PP1/12102
+/dev/vx/dsk/PP1-DATA/19c                vxfs        52428800     72512  51947264       1% /oracle/PP1/19.0.0
+/dev/vx/dsk/PP1-DATA/sapdata1           vxfs       220200960 148589504  71052000      68% /oracle/PP1/sapdata1
+/dev/vx/dsk/PP1-DATA/sapdata3           vxfs       183500800 129025544  54049672      71% /oracle/PP1/sapdata3
+/dev/vx/dsk/PP1-LOG/origlogA            vxfs        36700160   2196800  34233808       7% /oracle/PP1/origlogA
+/dev/vx/dsk/PP1-LOG/mirrlogA            vxfs        36700160   2169224  34261176       6% /oracle/PP1/mirrlogA
+/dev/vx/dsk/PP1-LOG/mirrlogB            vxfs        36700160   2169240  34261160       6% /oracle/PP1/mirrlogB
+/dev/vx/dsk/PP1-SAP/sapmnt              vxfs        52428800   5014624  47085112      10% /sapmnt/PP1
+/dev/vx/dsk/PP1-SAP/trans               vxfs        52428800    927624  51099568       2% /usr/sap/trans
+tmpfs                                   tmpfs       13144988         0  13144988       0% /run/user/1002
+/dev/vx/dsk/PP1-ASCS/SCS03              vxfs        10485760    286296  10120256       3% /usr/sap/PP1/SCS03
+/dev/vx/dsk/PP1-ASCS/ASCS00             vxfs        20971520    336792  20474000       2% /usr/sap/PP1/ASCS02
+tmpfs                                   tmpfs       13144988         0  13144988       0% /run/user/1001
+root@PIPP1SP#

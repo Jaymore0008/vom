@@ -1,0 +1,14 @@
+#Group       Attribute             System     Value
+ECCPP1DB     State                 PIPP1SF    |OFFLINE|
+ECCPP1DB     State                 PIPP1SP    |ONLINE|
+ECCPP1ERS    State                 PIPP1SF    |OFFLINE|
+ECCPP1ERS    State                 PIPP1SP    |OFFLINE|
+ECCPP1MS     State                 PIPP1SF    |OFFLINE|
+ECCPP1MS     State                 PIPP1SP    |ONLINE|
+SAPMNT       State                 PIPP1SF    |ONLINE|
+SAPMNT       State                 PIPP1SP    |ONLINE|
+cvm          State                 PIPP1SF    |ONLINE|
+cvm          State                 PIPP1SP    |ONLINE|
+vxfen        State                 PIPP1SF    |ONLINE|
+vxfen        State                 PIPP1SP    |ONLINE|
+root@PIPP1SP#

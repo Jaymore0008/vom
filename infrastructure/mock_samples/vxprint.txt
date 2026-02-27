@@ -1,0 +1,226 @@
+Disk group: PP1-SAP
+
+DG NAME         NCONFIG      NLOG     MINORS   GROUP-ID
+ST NAME         STATE        DM_CNT   SPARE_CNT         APPVOL_CNT
+DM NAME         DEVICE       TYPE     PRIVLEN  PUBLEN   STATE
+RV NAME         RLINK_CNT    KSTATE   STATE    PRIMARY  DATAVOLS  SRL
+RL NAME         RVG          KSTATE   STATE    REM_HOST REM_DG    REM_RLNK
+CO NAME         CACHEVOL     KSTATE   STATE
+VT NAME         RVG          KSTATE   STATE    NVOLUME
+V  NAME         RVG/VSET/CO  KSTATE   STATE    LENGTH   READPOL   PREFPLEX UTYPE
+PL NAME         VOLUME       KSTATE   STATE    LENGTH   LAYOUT    NCOL/WID MODE
+SD NAME         PLEX         DISK     DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+SV NAME         PLEX         VOLNAME  NVOLLAYR LENGTH   [COL/]OFF AM/NM    MODE
+SC NAME         PLEX         CACHE    DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+DC NAME         PARENTVOL    LOGVOL
+SP NAME         SNAPVOL      DCO
+EX NAME         ASSOC        VC                       PERMS    MODE     STATE
+SR NAME         KSTATE
+
+dg PP1-SAP      default      default  36000    1758113401.102893.PIPP1SF
+
+dm emc0_0366    emc0_0366    auto     65536    524204656 -
+
+v  bdcusers     -            ENABLED  ACTIVE   104857600 SELECT   -        fsgen
+pl bdcusers-01  bdcusers     ENABLED  ACTIVE   104857600 CONCAT   -        RW
+sd emc0_0366-03 bdcusers-01  emc0_0366 209715200 104857600 0      emc0_0366 ENA
+
+v  sapmnt       -            ENABLED  ACTIVE   104857600 SELECT   -        fsgen
+pl sapmnt-01    sapmnt       ENABLED  ACTIVE   104857600 CONCAT   -        RW
+sd emc0_0366-01 sapmnt-01    emc0_0366 0       104857600 0        emc0_0366 ENA
+
+v  trans        -            ENABLED  ACTIVE   104857600 SELECT   -        fsgen
+pl trans-01     trans        ENABLED  ACTIVE   104857600 CONCAT   -        RW
+sd emc0_0366-02 trans-01     emc0_0366 104857600 104857600 0      emc0_0366 ENA
+
+Disk group: PP1-ARCH
+
+DG NAME         NCONFIG      NLOG     MINORS   GROUP-ID
+ST NAME         STATE        DM_CNT   SPARE_CNT         APPVOL_CNT
+DM NAME         DEVICE       TYPE     PRIVLEN  PUBLEN   STATE
+RV NAME         RLINK_CNT    KSTATE   STATE    PRIMARY  DATAVOLS  SRL
+RL NAME         RVG          KSTATE   STATE    REM_HOST REM_DG    REM_RLNK
+CO NAME         CACHEVOL     KSTATE   STATE
+VT NAME         RVG          KSTATE   STATE    NVOLUME
+V  NAME         RVG/VSET/CO  KSTATE   STATE    LENGTH   READPOL   PREFPLEX UTYPE
+PL NAME         VOLUME       KSTATE   STATE    LENGTH   LAYOUT    NCOL/WID MODE
+SD NAME         PLEX         DISK     DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+SV NAME         PLEX         VOLNAME  NVOLLAYR LENGTH   [COL/]OFF AM/NM    MODE
+SC NAME         PLEX         CACHE    DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+DC NAME         PARENTVOL    LOGVOL
+SP NAME         SNAPVOL      DCO
+EX NAME         ASSOC        VC                       PERMS    MODE     STATE
+SR NAME         KSTATE
+
+dg PP1-ARCH     default      default  27000    1765179935.126578.PIPP1SP
+
+dm emc0_0365    emc0_0365    auto     65536    524204656 -
+
+v  oraarch      -            ENABLED  ACTIVE   419430400 SELECT   -        fsgen
+pl oraarch-01   oraarch      ENABLED  ACTIVE   419430400 CONCAT   -        RW
+sd emc0_0365-01 oraarch-01   emc0_0365 0       419430400 0        emc0_0365 ENA
+
+Disk group: PP1-ASCS
+
+DG NAME         NCONFIG      NLOG     MINORS   GROUP-ID
+ST NAME         STATE        DM_CNT   SPARE_CNT         APPVOL_CNT
+DM NAME         DEVICE       TYPE     PRIVLEN  PUBLEN   STATE
+RV NAME         RLINK_CNT    KSTATE   STATE    PRIMARY  DATAVOLS  SRL
+RL NAME         RVG          KSTATE   STATE    REM_HOST REM_DG    REM_RLNK
+CO NAME         CACHEVOL     KSTATE   STATE
+VT NAME         RVG          KSTATE   STATE    NVOLUME
+V  NAME         RVG/VSET/CO  KSTATE   STATE    LENGTH   READPOL   PREFPLEX UTYPE
+PL NAME         VOLUME       KSTATE   STATE    LENGTH   LAYOUT    NCOL/WID MODE
+SD NAME         PLEX         DISK     DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+SV NAME         PLEX         VOLNAME  NVOLLAYR LENGTH   [COL/]OFF AM/NM    MODE
+SC NAME         PLEX         CACHE    DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+DC NAME         PARENTVOL    LOGVOL
+SP NAME         SNAPVOL      DCO
+EX NAME         ASSOC        VC                       PERMS    MODE     STATE
+SR NAME         KSTATE
+
+dg PP1-ASCS     default      default  15000    1765180035.126597.PIPP1SP
+
+dm emc0_06d9    emc0_06d9    auto     65536    75429056 -
+
+v  ASCS00       -            ENABLED  ACTIVE   41943040 SELECT    -        fsgen
+pl ASCS00-01    ASCS00       ENABLED  ACTIVE   41943040 CONCAT    -        RW
+sd emc0_06d9-01 ASCS00-01    emc0_06d9 0       41943040 0         emc0_06d9 ENA
+
+v  SCS03        -            ENABLED  ACTIVE   20971520 SELECT    -        fsgen
+pl SCS03-01     SCS03        ENABLED  ACTIVE   20971520 CONCAT    -        RW
+sd emc0_06d9-02 SCS03-01     emc0_06d9 41943040 20971520 0        emc0_06d9 ENA
+
+Disk group: PP1-DATA
+
+DG NAME         NCONFIG      NLOG     MINORS   GROUP-ID
+ST NAME         STATE        DM_CNT   SPARE_CNT         APPVOL_CNT
+DM NAME         DEVICE       TYPE     PRIVLEN  PUBLEN   STATE
+RV NAME         RLINK_CNT    KSTATE   STATE    PRIMARY  DATAVOLS  SRL
+RL NAME         RVG          KSTATE   STATE    REM_HOST REM_DG    REM_RLNK
+CO NAME         CACHEVOL     KSTATE   STATE
+VT NAME         RVG          KSTATE   STATE    NVOLUME
+V  NAME         RVG/VSET/CO  KSTATE   STATE    LENGTH   READPOL   PREFPLEX UTYPE
+PL NAME         VOLUME       KSTATE   STATE    LENGTH   LAYOUT    NCOL/WID MODE
+SD NAME         PLEX         DISK     DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+SV NAME         PLEX         VOLNAME  NVOLLAYR LENGTH   [COL/]OFF AM/NM    MODE
+SC NAME         PLEX         CACHE    DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+DC NAME         PARENTVOL    LOGVOL
+SP NAME         SNAPVOL      DCO
+EX NAME         ASSOC        VC                       PERMS    MODE     STATE
+SR NAME         KSTATE
+
+dg PP1-DATA     default      default  18000    1765179938.126582.PIPP1SP
+
+dm emc0_0361    emc0_0361    auto     65536    524204656 -
+dm emc0_0362    emc0_0362    auto     65536    524204656 -
+dm emc0_0363    emc0_0363    auto     65536    524204656 -
+dm emc0_0364    emc0_0364    auto     65536    524204656 -
+
+v  oracle       -            ENABLED  ACTIVE   104857600 SELECT   -        fsgen
+pl oracle-01    oracle       ENABLED  ACTIVE   104857600 STRIPE   2/1024   RW
+sd emc0_0361-01 oracle-01    emc0_0361 0       52428800 0/0       emc0_0361 ENA
+sd emc0_0362-01 oracle-01    emc0_0362 0       52428800 1/0       emc0_0362 ENA
+
+v  sapdata1     -            ENABLED  ACTIVE   440401920 SELECT   -        fsgen
+pl sapdata1-01  sapdata1     ENABLED  ACTIVE   440401920 STRIPE   2/1024   RW
+sd emc0_0361-03 sapdata1-01  emc0_0361 104857600 104857600 0/0    emc0_0361 ENA
+sd emc0_0361-06 sapdata1-01  emc0_0361 346030080 62914560 0/104857600 emc0_0361 ENA
+sd emc0_0361-08 sapdata1-01  emc0_0361 471859200 52345456 0/167772160 emc0_0361 ENA
+sd emc0_0363-07 sapdata1-01  emc0_0363 471859200 83344  0/220117616 emc0_0363 ENA
+sd emc0_0362-03 sapdata1-01  emc0_0362 104857600 104857600 1/0    emc0_0362 ENA
+sd emc0_0362-06 sapdata1-01  emc0_0362 346030080 62914560 1/104857600 emc0_0362 ENA
+sd emc0_0362-08 sapdata1-01  emc0_0362 471859200 52345456 1/167772160 emc0_0362 ENA
+sd emc0_0364-07 sapdata1-01  emc0_0364 471859200 83344  1/220117616 emc0_0364 ENA
+
+v  sapdata2     -            ENABLED  ACTIVE   440401920 SELECT   -        fsgen
+pl sapdata2-01  sapdata2     ENABLED  ACTIVE   440401920 STRIPE   2/1024   RW
+sd emc0_0363-03 sapdata2-01  emc0_0363 104857600 104857600 0/0    emc0_0363 ENA
+sd emc0_0363-05 sapdata2-01  emc0_0363 314572800 94371840 0/104857600 emc0_0363 ENA
+sd emc0_0363-08 sapdata2-01  emc0_0363 492914064 20971520 0/199229440 emc0_0363 ENA
+sd emc0_0364-03 sapdata2-01  emc0_0364 104857600 104857600 1/0    emc0_0364 ENA
+sd emc0_0364-05 sapdata2-01  emc0_0364 314572800 94371840 1/104857600 emc0_0364 ENA
+sd emc0_0364-08 sapdata2-01  emc0_0364 492914064 20971520 1/199229440 emc0_0364 ENA
+
+v  sapdata3     -            ENABLED  ACTIVE   367001600 SELECT   -        fsgen
+pl sapdata3-01  sapdata3     ENABLED  ACTIVE   367001600 STRIPE   2/1024   RW
+sd emc0_0361-04 sapdata3-01  emc0_0361 209715200 104857600 0/0    emc0_0361 ENA
+sd emc0_0361-07 sapdata3-01  emc0_0361 408944640 62914560 0/104857600 emc0_0361 ENA
+sd emc0_0363-09 sapdata3-01  emc0_0363 471942544 15728640 0/167772160 emc0_0363 ENA
+sd emc0_0362-04 sapdata3-01  emc0_0362 209715200 104857600 1/0    emc0_0362 ENA
+sd emc0_0362-07 sapdata3-01  emc0_0362 408944640 62914560 1/104857600 emc0_0362 ENA
+sd emc0_0364-09 sapdata3-01  emc0_0364 471942544 15728640 1/167772160 emc0_0364 ENA
+
+v  sapdata4     -            ENABLED  ACTIVE   356515840 SELECT   -        fsgen
+pl sapdata4-01  sapdata4     ENABLED  ACTIVE   356515840 STRIPE   2/1024   RW
+sd emc0_0363-04 sapdata4-01  emc0_0363 209715200 104857600 0/0    emc0_0363 ENA
+sd emc0_0363-06 sapdata4-01  emc0_0363 408944640 62914560 0/104857600 emc0_0363 ENA
+sd emc0_0363-10 sapdata4-01  emc0_0363 487671184 5242880 0/167772160 emc0_0363 ENA
+sd emc0_0363-11 sapdata4-01  emc0_0363 513885584 5242880 0/173015040 emc0_0363 ENA
+sd emc0_0364-04 sapdata4-01  emc0_0364 209715200 104857600 1/0    emc0_0364 ENA
+sd emc0_0364-06 sapdata4-01  emc0_0364 408944640 62914560 1/104857600 emc0_0364 ENA
+sd emc0_0364-10 sapdata4-01  emc0_0364 487671184 5242880 1/167772160 emc0_0364 ENA
+sd emc0_0364-11 sapdata4-01  emc0_0364 513885584 5242880 1/173015040 emc0_0364 ENA
+
+v  sapreorg     -            ENABLED  ACTIVE   104857600 SELECT   -        fsgen
+pl sapreorg-01  sapreorg     ENABLED  ACTIVE   104857600 STRIPE   2/1024   RW
+sd emc0_0363-01 sapreorg-01  emc0_0363 0       52428800 0/0       emc0_0363 ENA
+sd emc0_0364-01 sapreorg-01  emc0_0364 0       52428800 1/0       emc0_0364 ENA
+
+v  softdump     -            ENABLED  ACTIVE   104857600 SELECT   -        fsgen
+pl softdump-01  softdump     ENABLED  ACTIVE   104857600 STRIPE   2/1024   RW
+sd emc0_0363-02 softdump-01  emc0_0363 52428800 52428800 0/0      emc0_0363 ENA
+sd emc0_0364-02 softdump-01  emc0_0364 52428800 52428800 1/0      emc0_0364 ENA
+
+v  19c          -            ENABLED  ACTIVE   104857600 SELECT   -        fsgen
+pl 19c-01       19c          ENABLED  ACTIVE   104857600 STRIPE   2/1024   RW
+sd emc0_0361-02 19c-01       emc0_0361 52428800 52428800 0/0      emc0_0361 ENA
+sd emc0_0362-02 19c-01       emc0_0362 52428800 52428800 1/0      emc0_0362 ENA
+
+v  12102        -            ENABLED  ACTIVE   62914560 SELECT    -        fsgen
+pl 12102-01     12102        ENABLED  ACTIVE   62914560 STRIPE    2/1024   RW
+sd emc0_0361-05 12102-01     emc0_0361 314572800 31457280 0/0     emc0_0361 ENA
+sd emc0_0362-05 12102-01     emc0_0362 314572800 31457280 1/0     emc0_0362 ENA
+
+Disk group: PP1-LOG
+
+DG NAME         NCONFIG      NLOG     MINORS   GROUP-ID
+ST NAME         STATE        DM_CNT   SPARE_CNT         APPVOL_CNT
+DM NAME         DEVICE       TYPE     PRIVLEN  PUBLEN   STATE
+RV NAME         RLINK_CNT    KSTATE   STATE    PRIMARY  DATAVOLS  SRL
+RL NAME         RVG          KSTATE   STATE    REM_HOST REM_DG    REM_RLNK
+CO NAME         CACHEVOL     KSTATE   STATE
+VT NAME         RVG          KSTATE   STATE    NVOLUME
+V  NAME         RVG/VSET/CO  KSTATE   STATE    LENGTH   READPOL   PREFPLEX UTYPE
+PL NAME         VOLUME       KSTATE   STATE    LENGTH   LAYOUT    NCOL/WID MODE
+SD NAME         PLEX         DISK     DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+SV NAME         PLEX         VOLNAME  NVOLLAYR LENGTH   [COL/]OFF AM/NM    MODE
+SC NAME         PLEX         CACHE    DISKOFFS LENGTH   [COL/]OFF DEVICE   MODE
+DC NAME         PARENTVOL    LOGVOL
+SP NAME         SNAPVOL      DCO
+EX NAME         ASSOC        VC                       PERMS    MODE     STATE
+SR NAME         KSTATE
+
+dg PP1-LOG      default      default  11000    1765179940.126589.PIPP1SP
+
+dm emc0_06d5    emc0_06d5    auto     65536    75429056 -
+dm emc0_06d6    emc0_06d6    auto     65536    75429056 -
+dm emc0_06d7    emc0_06d7    auto     65536    75429056 -
+dm emc0_06d8    emc0_06d8    auto     65536    75429056 -
+
+v  mirrlogA     -            ENABLED  ACTIVE   73400320 SELECT    -        fsgen
+pl mirrlogA-01  mirrlogA     ENABLED  ACTIVE   73400320 CONCAT    -        RW
+sd emc0_06d5-01 mirrlogA-01  emc0_06d5 0       73400320 0         emc0_06d5 ENA
+
+v  mirrlogB     -            ENABLED  ACTIVE   73400320 SELECT    -        fsgen
+pl mirrlogB-01  mirrlogB     ENABLED  ACTIVE   73400320 CONCAT    -        RW
+sd emc0_06d6-01 mirrlogB-01  emc0_06d6 0       73400320 0         emc0_06d6 ENA
+
+v  origlogA     -            ENABLED  ACTIVE   73400320 SELECT    -        fsgen
+pl origlogA-01  origlogA     ENABLED  ACTIVE   73400320 CONCAT    -        RW
+sd emc0_06d7-01 origlogA-01  emc0_06d7 0       73400320 0         emc0_06d7 ENA
+
+v  origlogB     -            ENABLED  ACTIVE   73400320 SELECT    -        fsgen
+pl origlogB-01  origlogB     ENABLED  ACTIVE   73400320 CONCAT    -        RW
+sd emc0_06d8-01 origlogB-01  emc0_06d8 0       73400320 0         emc0_06d8 ENA
+root@PIPP1SP#

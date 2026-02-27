@@ -2,9 +2,9 @@
 
 import paramiko
 import logging
-import socket
-import threading
-import time
+from typing import Tuple
+
+from .ssh_base import BaseSSHClient
 
 
 class SSHConnectionError(Exception):
@@ -15,164 +15,57 @@ class SSHCommandError(Exception):
     pass
 
 
-class SSHClient:
+class RealSSHClient(BaseSSHClient):
 
-    def __init__(
-        self,
-        host: str,
-        username: str = "root",
-        timeout: int = 10,
-        retries: int = 2
-    ):
+    def __init__(self, host: str, username: str = "root", timeout: int = 10):
 
         self.host = host
         self.username = username
         self.timeout = timeout
-        self.retries = retries
-
         self.client = None
 
-        self._lock = threading.Lock()
+    def _connect(self):
 
-    # --------------------------------------------------
-    # Connect
-    # --------------------------------------------------
+        try:
 
-    def connect(self):
+            self.client = paramiko.SSHClient()
+            self.client.set_missing_host_key_policy(
+                paramiko.AutoAddPolicy()
+            )
 
-        with self._lock:
+            self.client.connect(
+                hostname=self.host,
+                username=self.username,
+                timeout=self.timeout
+            )
 
-            if self.client:
-                return
+            logging.info(f"[SSH] Connected: {self.host}")
 
-            try:
+        except Exception as e:
+            logging.error(f"[SSH] Connection failed: {self.host} : {e}")
+            raise SSHConnectionError(str(e))
 
-                client = paramiko.SSHClient()
+    def execute(self, command: str) -> Tuple[int, str, str]:
 
-                client.set_missing_host_key_policy(
-                    paramiko.AutoAddPolicy()
-                )
+        if not self.client:
+            self._connect()
 
-                client.connect(
-                    hostname=self.host,
-                    username=self.username,
-                    timeout=self.timeout,
-                    banner_timeout=self.timeout,
-                    auth_timeout=self.timeout
-                )
+        try:
 
-                self.client = client
+            stdin, stdout, stderr = self.client.exec_command(command)
 
-                logging.info(f"[SSH] Connected → {self.host}")
+            exit_code = stdout.channel.recv_exit_status()
 
-            except (socket.timeout, paramiko.SSHException, Exception) as e:
+            output = stdout.read().decode()
+            error = stderr.read().decode()
 
-                logging.error(f"[SSH] Connection failed → {self.host}: {e}")
+            return exit_code, output, error
 
-                raise SSHConnectionError(
-                    f"Failed to connect to {self.host}"
-                ) from e
-
-    # --------------------------------------------------
-    # Execute command
-    # --------------------------------------------------
-
-    def execute(self, command: str):
-
-        last_exception = None
-
-        for attempt in range(self.retries + 1):
-
-            try:
-
-                if not self.client:
-                    self.connect()
-
-                logging.debug(
-                    f"[SSH] Executing on {self.host}: {command}"
-                )
-
-                stdin, stdout, stderr = self.client.exec_command(
-                    command,
-                    timeout=self.timeout
-                )
-
-                exit_code = stdout.channel.recv_exit_status()
-
-                output = stdout.read().decode(errors="ignore")
-
-                error = stderr.read().decode(errors="ignore")
-
-                if exit_code != 0:
-
-                    logging.warning(
-                        f"[SSH] Command failed ({self.host}): {command} | {error}"
-                    )
-
-                return exit_code, output, error
-
-            except (
-                paramiko.SSHException,
-                socket.timeout,
-                EOFError,
-                Exception
-            ) as e:
-
-                logging.warning(
-                    f"[SSH] Command attempt {attempt+1} failed → {self.host}: {e}"
-                )
-
-                last_exception = e
-
-                self._reconnect()
-
-                time.sleep(1)
-
-        raise SSHCommandError(
-            f"Command failed after retries on {self.host}: {command}"
-        ) from last_exception
-
-    # --------------------------------------------------
-    # Reconnect logic
-    # --------------------------------------------------
-
-    def _reconnect(self):
-
-        logging.info(f"[SSH] Reconnecting → {self.host}")
-
-        self.close()
-
-        self.connect()
-
-    # --------------------------------------------------
-    # Close connection
-    # --------------------------------------------------
+        except Exception as e:
+            raise SSHCommandError(str(e))
 
     def close(self):
 
-        with self._lock:
-
-            if self.client:
-
-                try:
-                    self.client.close()
-                except Exception:
-                    pass
-
-                self.client = None
-
-                logging.info(f"[SSH] Closed → {self.host}")
-
-    # --------------------------------------------------
-    # Context manager support
-    # --------------------------------------------------
-
-    def __enter__(self):
-
-        self.connect()
-
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-
-        self.close()
+        if self.client:
+            self.client.close()
+            self.client = None

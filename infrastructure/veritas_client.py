@@ -17,6 +17,8 @@ from .ssh_client import SSHClient, SSHCommandError, SSHConnectionError
 from .veritas_commands import VeritasCommands
 from .parsers import VeritasParser
 
+from .ssh_factory import create_ssh_client
+
 
 class VeritasClient:
 
@@ -25,7 +27,7 @@ class VeritasClient:
         self.host = host
         self.username = username
 
-        self.ssh = SSHClient(
+        self.ssh = create_ssh_client(
             host=self.host,
             username=self.username
         )
