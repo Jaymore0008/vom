@@ -7,17 +7,21 @@ Execution layer responsible for:
 
 - Executing Veritas CLI commands via SSHClient
 - Parsing outputs via VeritasParser
-- Returning structured data for domain layer
+- Returning structured domain objects
 """
 
 import logging
-from typing import List, Dict, Tuple
+from typing import List, Dict, Union, Any
 
-from .ssh_client import SSHClient, SSHCommandError, SSHConnectionError
-from .veritas_commands import VeritasCommands
+from ..ssh.ssh_client import SSHCommandError, SSHConnectionError
+from ..ssh.ssh_factory import create_ssh_client
 from .parsers import VeritasParser
+from .veritas_commands import VeritasCommands
 
-from .ssh_factory import create_ssh_client
+from domain.storage.diskgroup import DiskGroup
+from domain.storage.volume import Volume
+from domain.storage.filesystem import Filesystem
+from domain.cluster.service_group import ServiceGroup
 
 
 class VeritasClient:
@@ -36,7 +40,10 @@ class VeritasClient:
     # Core execution wrapper
     # --------------------------------------------------
 
-    def _run(self, command: str) -> str:
+    def _run(self, command: Union[str, VeritasCommands]) -> str:
+
+        if isinstance(command, VeritasCommands):
+            command = command.value
 
         try:
 
@@ -62,7 +69,7 @@ class VeritasClient:
     # Diskgroups
     # --------------------------------------------------
 
-    def get_diskgroups(self) -> List[Dict]:
+    def get_diskgroups(self) -> List[DiskGroup]:
 
         output = self._run(VeritasCommands.VXDG_LIST)
 
@@ -72,10 +79,9 @@ class VeritasClient:
     # Volumes
     # --------------------------------------------------
 
-    def get_volumes(self) -> List[Dict]:
+    def get_volumes(self) -> List[Volume]:
 
         vx_output = self._run(VeritasCommands.VXPRINT)
-
         df_output = self._run(VeritasCommands.DF)
 
         return VeritasParser.parse_volumes(
@@ -87,7 +93,7 @@ class VeritasClient:
     # Filesystems
     # --------------------------------------------------
 
-    def get_filesystems(self) -> List[Dict]:
+    def get_filesystems(self) -> List[Filesystem]:
 
         df_output = self._run(VeritasCommands.DF)
 
@@ -97,7 +103,7 @@ class VeritasClient:
     # Service Groups
     # --------------------------------------------------
 
-    def get_service_groups(self) -> List[Dict]:
+    def get_service_groups(self) -> List[ServiceGroup]:
 
         output = self._run(VeritasCommands.HAGRP_STATE)
 
@@ -127,23 +133,39 @@ class VeritasClient:
     # Cluster summary
     # --------------------------------------------------
 
-    def get_cluster_summary(self) -> Dict:
+    def get_cluster_summary(self) -> Dict[str, Any]:
+
+        df_output = self._run(VeritasCommands.DF)
+        vx_output = self._run(VeritasCommands.VXPRINT)
 
         return {
 
             "host": self.host,
 
-            "diskgroups": self.get_diskgroups(),
+            "diskgroups": VeritasParser.parse_diskgroups(
+                self._run(VeritasCommands.VXDG_LIST)
+            ),
 
-            "volumes": self.get_volumes(),
+            "volumes": VeritasParser.parse_volumes(
+                vx_output,
+                df_output
+            ),
 
-            "filesystems": self.get_filesystems(),
+            "filesystems": VeritasParser.parse_filesystems(
+                df_output
+            ),
 
-            "service_groups": self.get_service_groups(),
+            "service_groups": VeritasParser.parse_service_group_states(
+                self._run(VeritasCommands.HAGRP_STATE)
+            ),
 
-            "resources": self.get_resources(),
+            "resources": VeritasParser.parse_resource_states(
+                self._run(VeritasCommands.HARES_STATE)
+            ),
 
-            "node_state": self.get_node_state()
+            "node_state": VeritasParser.parse_node_states(
+                self._run(VeritasCommands.HASYS_STATE)
+            )
         }
 
     # --------------------------------------------------

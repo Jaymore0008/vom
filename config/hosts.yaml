@@ -1,0 +1,10 @@
+linux_hosts:
+  
+  PP1SAPP01: 10.128.244.211
+  PP1SAPP02: 10.128.244.212
+  PIPP1SP: 10.128.244.45
+  PIPP1SF: 10.128.244.46
+
+settings:
+  max_workers: 20
+  ssh_user: root

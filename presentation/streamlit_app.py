@@ -4,7 +4,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-from application.cluster_service import ClusterService
+from application.services.cluster_service import ClusterService
 from shared.config_loader import ConfigLoader
 
 
