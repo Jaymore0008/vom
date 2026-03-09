@@ -12,16 +12,19 @@ Execution layer responsible for:
 
 import logging
 from typing import List, Dict, Union, Any
+from unittest import result
 
 from ..ssh.ssh_client import SSHCommandError, SSHConnectionError
 from ..ssh.ssh_factory import create_ssh_client
 from .parsers import VeritasParser
 from .veritas_commands import VeritasCommands
+from ..ssh.ssh_base import BaseSSHClient    
 
 from domain.storage.diskgroup import DiskGroup
 from domain.storage.volume import Volume
 from domain.storage.filesystem import Filesystem
 from domain.cluster.service_group import ServiceGroup
+from domain.cluster.node import Node, NodeRole, NodeState
 
 
 class VeritasClient:
@@ -47,7 +50,12 @@ class VeritasClient:
 
         try:
 
-            exit_code, output, error = self.ssh.execute(command)
+            #exit_code, output, error = self.ssh.execute(command)
+            result = self.ssh.execute(command)
+
+            exit_code = result.exit_code
+            output = result.stdout
+            error = result.stderr
 
             if exit_code != 0:
                 logging.warning(
@@ -113,17 +121,17 @@ class VeritasClient:
     # Resources
     # --------------------------------------------------
 
-    def get_resources(self) -> List[Dict]:
+    # def get_resources(self) -> List[Dict]:
 
-        output = self._run(VeritasCommands.HARES_STATE)
+    #     output = self._run(VeritasCommands.HARES_STATE)
 
-        return VeritasParser.parse_resource_states(output)
+    #     return VeritasParser.parse_resource_states(output)
 
     # --------------------------------------------------
     # Node state
     # --------------------------------------------------
 
-    def get_node_state(self) -> List[Dict]:
+    def get_node_state(self) -> List[Node]:
 
         output = self._run(VeritasCommands.HASYS_STATE)
 
@@ -159,9 +167,9 @@ class VeritasClient:
                 self._run(VeritasCommands.HAGRP_STATE)
             ),
 
-            "resources": VeritasParser.parse_resource_states(
-                self._run(VeritasCommands.HARES_STATE)
-            ),
+            # "resources": VeritasParser.parse_resource_states(
+            #     self._run(VeritasCommands.HARES_STATE)
+            # ),
 
             "node_state": VeritasParser.parse_node_states(
                 self._run(VeritasCommands.HASYS_STATE)

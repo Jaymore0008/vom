@@ -22,6 +22,10 @@ def load_mock_file(filename: str) -> str:
 
 MOCK_RESPONSES = {
 
+    VeritasCommands.VXDG_LIST.value: load_mock_file("vxdg_list.txt"),
+
+    VeritasCommands.HASYS_STATE.value: load_mock_file("hasys_state.txt"),
+
     VeritasCommands.HAGRP_STATE.value: load_mock_file("hagrp_state.txt"),
 
     VeritasCommands.VXPRINT.value: load_mock_file("vxprint.txt"),

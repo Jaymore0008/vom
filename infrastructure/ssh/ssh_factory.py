@@ -11,7 +11,7 @@ from ..mocks.mock_data import MOCK_RESPONSES
 
 def create_ssh_client(host: str, username: str = "root") -> BaseSSHClient:
 
-    env = os.getenv("ENV", "PROD").upper()
+    env = os.getenv("ENV", "DEV").upper()
 
     if env == "DEV":
 

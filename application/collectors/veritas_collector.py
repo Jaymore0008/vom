@@ -17,7 +17,7 @@ import logging
 from typing import List
 
 from domain.cluster.cluster import Cluster
-from domain.cluster.node import Node
+from domain.cluster.node import Node, NodeRole, NodeState
 from domain.storage.diskgroup import DiskGroup
 from domain.storage.volume import Volume
 from domain.storage.filesystem import Filesystem
@@ -57,6 +57,8 @@ class VeritasCollector:
             filesystems=filesystems,
             service_groups=service_groups
         )
+
+        cluster.detect_active_node()
 
         # Run domain health checks
         cluster.detect_issues()
@@ -151,26 +153,12 @@ class VeritasCollector:
 
         try:
 
-            node_data = client.get_node_state()
-
-            nodes = []
-
-            for item in node_data:
-
-                nodes.append(
-                    Node(
-                        name=item.get("node"),
-                        ip=item.get("ip", ""),
-                        role=item.get("role", "UNKNOWN"),
-                        state=item.get("state", "UNKNOWN"),
-                        is_active=item.get("is_active", False)
-                    )
-                )
+            nodes = client.get_node_state()
 
             logging.info(f"[VeritasCollector] Found {len(nodes)} nodes")
 
             return nodes
-
+        
         except Exception as e:
 
             logging.error(f"[VeritasCollector] Node collection failed: {e}")

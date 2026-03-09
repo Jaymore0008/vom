@@ -1,53 +1,76 @@
 from pathlib import Path
+import yaml
 
 
-CONFIG_PATH = Path(__file__).parent.parent / "config" / "sap_nodes.txt"
+CONFIG_PATH = Path(__file__).parent.parent / "config" / "clusters.yaml"
 
 
 class ConfigLoader:
 
     def __init__(self):
-        self.nodes = self._load_nodes()
 
-    def _load_nodes(self):
+        self.config = self._load_config()
+        self.clusters = self.config.get("clusters", {})
 
-        nodes = {}
+    # --------------------------------------------------
+    # Load YAML configuration
+    # --------------------------------------------------
 
-        with open(CONFIG_PATH) as f:
+    def _load_config(self):
 
-            for line in f:
+        if not CONFIG_PATH.exists():
+            raise FileNotFoundError(f"Cluster config not found: {CONFIG_PATH}")
 
-                if not line.strip():
-                    continue
+        with open(CONFIG_PATH, "r") as f:
+            return yaml.safe_load(f)
 
-                if line.startswith("SID"):
-                    continue
+    # --------------------------------------------------
+    # Get full cluster configuration
+    # --------------------------------------------------
 
-                parts = line.split()
+    def get_cluster(self, sid):
 
-                sid = parts[0]
-                sp = parts[1]
-                sf = parts[2]
+        cluster = self.clusters.get(sid)
 
-                nodes[sid] = {
-                    "sp": sp,
-                    "sf": sf
-                }
+        if not cluster:
+            raise ValueError(f"Cluster '{sid}' not found in configuration")
 
-        return nodes
+        return {
+            "sp": cluster.get("SP"),
+            "sf": cluster.get("SF"),
+            "username": cluster.get("username", "root")
+        }
 
-    def get_all_sids(self):
-
-        return list(self.nodes.keys())
+    # --------------------------------------------------
+    # Get primary node
+    # --------------------------------------------------
 
     def get_sp(self, sid):
 
-        return self.nodes[sid]["sp"]
+        cluster = self.get_cluster(sid)
+        return cluster["sp"]
+
+    # --------------------------------------------------
+    # Get failover node
+    # --------------------------------------------------
 
     def get_sf(self, sid):
 
-        return self.nodes[sid]["sf"]
+        cluster = self.get_cluster(sid)
+        return cluster["sf"]
+
+    # --------------------------------------------------
+    # List all cluster SIDs
+    # --------------------------------------------------
+
+    def get_all_sids(self):
+
+        return list(self.clusters.keys())
+
+    # --------------------------------------------------
+    # Get full configuration
+    # --------------------------------------------------
 
     def get_all(self):
 
-        return self.nodes
+        return self.clusters

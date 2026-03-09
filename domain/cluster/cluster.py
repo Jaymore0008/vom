@@ -64,6 +64,36 @@ class Cluster:
 
         self.issues = issues
 
+    def summary(self) -> dict:
+
+        return {
+            "sid": self.sid,
+            "health": self.health.value,
+            "node_count": len(self.nodes),
+            "service_group_count": len(self.service_groups),
+            "diskgroup_count": len(self.diskgroups),
+            "filesystem_count": len(self.filesystems),
+            "issue_count": len(self.issues)
+        }
+
+    def detect_active_node(self):
+
+        node_sg_count = {node.name: 0 for node in self.nodes}
+
+        for sg in self.service_groups:
+            for node, state in sg.node_states.items():
+
+                if state.value == "ONLINE":
+                    node_sg_count[node] += 1
+
+        if not node_sg_count:
+            return
+
+        active_node = max(node_sg_count, key=lambda node: node_sg_count[node])
+
+        for node in self.nodes:
+            node.is_active = node.name == active_node
+
     @property
     def health(self) -> HealthStatus:
 

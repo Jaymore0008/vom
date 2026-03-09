@@ -35,14 +35,34 @@ class ClusterService:
 
             cluster_config = self.config.get_cluster(sid)
 
-            host = cluster_config["host"]
+            sp = cluster_config["sp"]
+            sf = cluster_config["sf"]
             username = cluster_config.get("username", "root")
 
-            collector = VeritasCollector(host, username)
+            # Try primary node first
+            try:
+
+                collector = VeritasCollector(sp, username)
+
+                cluster = collector.collect_cluster(sid)
+
+                logging.info(f"[ClusterService] Cluster {sid} collected from SP {sp}")
+
+                return cluster
+
+            except Exception as e:
+
+                logging.warning(
+                    f"[ClusterService] SP node unreachable for {sid} ({sp}). "
+                    f"Trying SF {sf}. Error: {e}"
+                )
+
+            # Try failover node
+            collector = VeritasCollector(sf, username)
 
             cluster = collector.collect_cluster(sid)
 
-            logging.info(f"[ClusterService] Cluster {sid} collected")
+            logging.info(f"[ClusterService] Cluster {sid} collected from SF {sf}")
 
             return cluster
 
@@ -55,7 +75,7 @@ class ClusterService:
     # --------------------------------------------------
     # Get cluster summary (for dashboards)
     # --------------------------------------------------
-
+   
     def get_cluster_summary(self, sid: str) -> Optional[dict]:
 
         cluster = self.collect_cluster(sid)
@@ -85,8 +105,9 @@ class ClusterService:
     def get_cluster_health(self, sid: str):
 
         cluster = self.collect_cluster(sid)
-
+        
         if not cluster:
             return "UNKNOWN"
 
-        return cluster.health().value
+        #return cluster.health().value
+        return cluster.health.value

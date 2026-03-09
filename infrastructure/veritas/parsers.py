@@ -7,14 +7,16 @@ from domain.storage.diskgroup import DiskGroup, DiskGroupState
 from domain.storage.volume import Volume, VolumeLayout
 from domain.storage.filesystem import Filesystem
 from domain.cluster.service_group import ServiceGroup, ServiceGroupState
+from domain.cluster.node import Node, NodeRole, NodeState
 
 
 class VeritasParser:
 
     # --------------------------------------------------
-    # Diskgroups
+    # Diskgroups 
     # --------------------------------------------------
 
+    @staticmethod
     @staticmethod
     def parse_diskgroups(output: str) -> List[DiskGroup]:
 
@@ -29,20 +31,31 @@ class VeritasParser:
 
             parts = line.split()
 
-            if len(parts) < 2:
+            if len(parts) < 3:
                 continue
 
             name = parts[0]
+            state_flags = parts[1]
+            dg_id = parts[2]
 
-            try:
-                state = DiskGroupState(parts[1])
-            except ValueError:
+            # Determine state
+            if "enabled" in state_flags:
+                state = DiskGroupState.ONLINE
+            elif "disabled" in state_flags:
+                state = DiskGroupState.OFFLINE
+            else:
                 state = DiskGroupState.UNKNOWN
+
+            # Extract node from ID
+            node = None
+            if "." in dg_id:
+                node = dg_id.split(".")[-1]
 
             diskgroups.append(
                 DiskGroup(
                     name=name,
-                    state=state
+                    state=state,
+                    node=node
                 )
             )
 
@@ -237,3 +250,51 @@ class VeritasParser:
             groups[group_name].set_state(node, state)
 
         return list(groups.values())
+    
+
+    #node states 
+    
+    @staticmethod
+    def parse_node_states(output: str) -> List[Node]:
+
+        nodes: List[Node] = []
+
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            if not line or line.startswith("#"):
+                continue
+
+            parts = line.split()
+
+            if len(parts) < 3:
+                continue
+
+            node_name = parts[0]
+            attribute = parts[1]
+            value = parts[2]
+
+            if attribute != "SysState":
+                continue
+
+            # Convert state safely
+            try:
+                state = NodeState(value)
+            except ValueError:
+                state = NodeState.UNKNOWN
+
+            # Role detection (simple heuristic)
+            role = NodeRole.SP if node_name.endswith("SP") else NodeRole.SF
+
+            nodes.append(
+                Node(
+                    name=node_name,
+                    ip="",
+                    role=role,
+                    state=state,
+                    is_active=False
+                )
+            )
+
+        return nodes
